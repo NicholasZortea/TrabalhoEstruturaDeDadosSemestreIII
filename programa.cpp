@@ -78,6 +78,8 @@ struct nodo *retira(nodo *tree, TIPO informacao)   // Preencha
     }
     return tree;
 }
+
+//////////////////////INFIXA
 void infixa ( nodo *tree )
 {
     if ( tree != NULL )
@@ -88,14 +90,75 @@ void infixa ( nodo *tree )
     }
 }
 
-void busca ( nodo *tree){
-    if (tree == NULL){
-        cout << "esse valor nao existe" << endl;
+/////////////////////POSFIXA
+void posfixa ( nodo *tree )
+{
+    if ( tree != NULL)
+    {
+        posfixa(tree -> esquerda);
+        posfixa(tree -> direita);
+        cout << tree -> informacao << " ";
+    }
+
+}
+////////////////////PREFIXA
+void prefixa ( nodo *tree )
+{
+    if ( tree != NULL )
+    {
+        cout << tree -> informacao << " ";
+        prefixa(tree -> esquerda);
+        prefixa(tree -> direita);
+    }
+}
+
+
+// ///////////////////////BUSCA
+    int i = 0;
+    bool existe = false;
+    int caminho[100];
+struct nodo *busca(nodo *tree, TIPO informacao)
+{
+
+    if(tree == NULL)
+    {
+        cout << informacao << " nao existe" << endl;
+        return NULL;
+
     }
     else
     {
-        if(tree < tree->informacao){
-            busca(tree->esquerda);
+        existe = false;
+        caminho[i]= tree->informacao;
+        i++;
+        if(tree->informacao > informacao)
+        {
+            busca(tree->esquerda, informacao);
+        }
+        else if(tree->informacao < informacao)
+        {
+            busca(tree->direita, informacao);
+
+        }
+        else
+        {
+            cout << informacao << " existe. Caminho: ";
+            existe=true;
+
+            if(existe==true)
+            {
+                for(int i = 0; i < 100; i++)
+                {
+                    cout << caminho[i] << " ";
+                    if (caminho[i] == tree ->informacao){
+                        cout << endl;
+                        break;
+                    }
+
+                }
+                cout << endl;
+            }
+
         }
     }
 }
@@ -104,34 +167,72 @@ int main()   //freopen("arvore.in","r",stdin);
     nodo *raiz = 0;
     TIPO valor;
     int elementos;
-    cin >> elementos;
+    cout << "Para comecar, insira quantas valores serao inseridos na arvore:" << endl;
+    //cin >> elementos;
+    elementos = 7;
     while (elementos--)
     {
         cin >> valor;
         raiz = insere ( raiz, valor );
     }
     int nOpcao;
+    bool tru = true;
 
-    cout << "Digite a opcao desejada na arvore:" << endl;
-    cout << "1 - Insercao" << endl;
-    cout << "2 - Busca" << endl;
-    cout << "3 - Retirada" << endl;
-    cout << "4 - Listagem Prefixa" << endl;
-    cout << "5 - Listagem Infixa" << endl;
-    cout << "6 - Listagem Posfixa" << endl;
-    cout << "Outro Numero - Sair" << endl;
-
-    cin >> nOpcao;
-
-    switch (nOpcao)
+    while (tru)
     {
-    case 1:
-        break;
-    case 2:
+        cout << "Digite a opcao desejada na arvore:" << endl;
+        cout << "1 - Insercao" << endl;
+        cout << "2 - Busca" << endl;
+        cout << "3 - Retirada" << endl;
+        cout << "4 - Listagem Prefixa" << endl;
+        cout << "5 - Listagem Infixa" << endl;
+        cout << "6 - Listagem Posfixa" << endl;
+        cout << "Outro Numero - Sair" << endl;
 
+        cin >> nOpcao;
+
+        switch (nOpcao)
+        {
+        case 1:
+            cout << "Digite o valor que deseja inserir:" << endl;
+            TIPO nElementoAInserir;
+            cin >> nElementoAInserir;
+            raiz = insere ( raiz, nElementoAInserir );
+            cout << endl;
+            break;
+        case 2:
+            cout << "Digite o elemento que deseja buscar:" << endl;
+            TIPO nElementoABuscar;
+            cin >> nElementoABuscar;
+
+            busca( raiz, nElementoABuscar );
+            cout << endl;
+            break;
+        case 3:
+            cout << "Digite o elemento que deseja retirar da arvore: " << endl;
+            TIPO nElementoARetirar;
+            cin >> nElementoARetirar;
+            raiz = retira( raiz, nElementoARetirar );
+            break;
+        case 4:
+            prefixa(raiz);
+            cout << endl;
+            break;
+        case 5:
+            infixa(raiz);
+            cout << endl;
+            break;
+        case 6:
+            posfixa(raiz);
+            cout << endl;
+            break;
+        default:
+            tru = false;
+            break;
+        }
     }
 
-    infixa (raiz);
-    cout << endl;
+   // infixa (raiz);
+   // cout << endl;
     return 0;
 }
